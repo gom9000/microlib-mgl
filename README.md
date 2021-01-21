@@ -1,0 +1,255 @@
+# MGL - Micro Graphic Library (Versione 1.0 - 02/05/1999)
+
+Libreria di routines C per la gestione minimale di grafica a caratteri e pixel
+che utilizza le PC BIOS API.
+
+
+
+La distribuzione della libreria consiste dei seguenti files:
+
+	MGL.TXT			documentazione della libreria (questo testo)
+	MGL.H			include file della libreria
+	LIBMGL.A		Micro Graphic Library (djgpp compatibile)
+	MAKEFILE		Makefile dei demo della libreria
+	MGL_DEMO.C		file sorgente della demo della libreria
+	MGL_DEMO.EXE	        eseguibile della demo della libreria
+
+
+
+
+## MGL - Strutture Fondamentali della Libreria
+
+La struttura principale della libreria è MGL_VIDEO, che contiene il modo video
+selezionato con tutti i suoi attributi suddivisi per:
+
+    attributi, e relativi valori, del modo video:
+
+	int       mode;                  /* contiene il modo video corrente */
+			MGL_TEXT40x25x16BW
+			MGL_TEXT40x25x16
+			MGL_TEXT80x25x2
+			MGL_TEXT80x25x16BW
+			MGL_TEXT80x25x16
+			MGL_GRAPH320x200x4BW
+			MGL_GRAPH320x200x4
+			MGL_GRAPH320x200x16
+			MGL_GRAPH320x200x256
+			MGL_GRAPH640x200x2  
+			MGL_GRAPH640x200x16
+			MGL_GRAPH640x350x2   
+			MGL_GRAPH640x350x16  
+			MGL_GRAPH640x480x2   
+			MGL_GRAPH640x480x16  
+	char     *ramaddress;      /* indirizzo ram video del modo corrente */
+	char      modetype;                   /* se modo testuale o grafico */
+			MGL_TEXT_MODE
+			MGL_GRAPHIC_MODE
+	char      colortype;        /* se modo a colori, bw o monocromatico */
+			MGL_COLOR_MODE
+			MGL_MONOCHROME_MODE
+			MGL_BW_MODE
+	int       colors;                /* numero colori del modo corrente */
+	MGL_SIZE  text;        /* dimensione in caratteri del modo corrente */
+	MGL_SIZE  graphic;         /* dimensione in pixel del modo corrente */
+
+
+    attributi del sistema:
+
+	int       adapter;      /* tipologia di adattatore video installato */
+			MGL_NO_ADAPTER
+			MGL_MDA_ADAPTER
+			MGL_CGA_ADAPTER
+			MGL_EGA_ADAPTER
+			MGL_PGA_ADAPTER
+			MGL_VGA_ADAPTER
+			MGL_MCGA_ADAPTER
+			MGL_UNKNOW_ADAPTER
+	int       monitor;         /* tipologia di monitor video installato */
+			MGL_NO_MONITOR
+			MGL_MONOCHROME_MONITOR
+			MGL_COLORS_MONITOR
+			MGL_UNKNOW_MONITOR
+
+    
+    attributi delle pagine video:
+
+	int       pages;           /* numero pagine video del modo corrente */
+	int       activepage;          /* pagina video correntemente attiva */
+
+
+
+Le altre strutture componenti la libreria sono:
+
+    MGL_SIZE, MGL_COORD
+	int       col
+	int	  row
+
+
+Le routines implementate dalla libreria sono suddivise in:
+
+routines per la gestione del modo video:
+
+	void MGL_setVideoMode(int mode);
+	void MGL_setExtraVideoMode(int mode);
+	int  MGL_getVideoMode(void);
+
+routines per il recupero degli attributi di sistema:
+
+	int  MGL_getVideoAdapter(void);
+	int  MGL_getVideoMonitor(void);
+
+routines per la gestione delle aree video:
+
+	void MGL_setActivePage(int page);
+	void MGL_clearScreen(int color);
+	void MGL_cls(void);
+	void MGL_scrollUp(int rows, <rect>, int color);
+	void MGL_scrollDown(int rows, <rect>, int color);
+
+routines per la gestione del cursore:
+
+	void MGL_setCursorPosition(int col, int row, int page);
+	void MGL_getCursorPosition(int* col, int* row, int page);
+	void MGL_setCursorDimension(int size);
+	int  MGL_getCursorDimension(void);
+
+routines primitive per la scrittura e lettura di caratteri e pixel:
+
+	char MGL_getChar(int* fgcolor, int* bgcolor, int page);
+	void MGL_writeChar(char ch, int fgcolor, int bgcolor, int page);
+	int  MGL_getPixel(int col, int row, int page);
+	void MGL_writePixel(int col, int row, int color, int page);
+	void MGL_writeString(char *str, int fgcolor, int bgcolor, int page);
+	char MGL_readKey(char* skey);
+
+
+
+
+## MGL - Elenco e descrizione di tutte le funzioni della libreria
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	void MGL_setVideoMode(int mode)
+
+	Imposta il modo video corrente tra i modi gestiti dalla libreria.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	void MGL_setExtraVideoMode(int mode)
+
+	Imposta il modo video corrente bypassando i modi gestiti dalla libreria.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	int MGL_getVideoMode(void)
+
+	Ritorna il modo video correntemente selezionato.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	int  MGL_getVideoAdapter(void)
+
+	Ritorna l'adattatore video rilevato.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	int MGL_getVideoMonitor(void)
+
+	Ritorna il monitor video rilevato.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	void MGL_setActivePage(int page)
+
+	Imposta la pagina video attiva.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	void MGL_clearScreen(int color)
+
+	Effettua il clear dell'intera area video settando il colore di fondo.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	void MGL_cls(void)
+
+	effettua il clear dell'intera area video nel modo corrente.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	void MGL_scrollUp(int rows, int tlrow, int tlcol, int brrow, int brcol,
+	int color)
+
+	Effettua lo scroll di rows righe verso l'alto dell'area specificata.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	void MGL_scrollDown(int rows, int tlrow, int tlcol, int brrow,
+	int brcol, int color)
+
+	Effettua lo scroll di rows righe verso il basso dell'area specificata.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	void MGL_setCursorPosition(int col, int row, int page)
+
+	Imposta la posizione corrente del cursore nella pagina video
+	specificata.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	void MGL_getCursorPosition(int* col, int* row, int page)
+
+	Ritorna la posizione corrente del cursore nella pagina video
+	specificata.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	void MGL_setCursorDimension(int size)
+
+	Imposta la dimensione verticale del cursore.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	int MGL_getCursorDimension(void)
+
+	Ritorna la dimensione verticale del cursore.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	char MGL_getChar(int* fgcolor, int* bgcolor, int page)
+
+	Restituisce il carattere e l'attributo colore presenti alla posizione
+        corrente del cursore.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	void MGL_writeChar(char ch, int fgcolor, int bgcolor, int page)
+
+	Scrive il carattere con gli attributi specificati.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	int MGL_getPixel(int col, int row, int page)
+
+	Restituisce l'attributo colore del pixel alla posizione specificata.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	void MGL_writePixel(int col, int row, int color, int page)
+
+	Scrive il pixel con gli attributi specificati.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	void MGL_writeString(char *str, int fgcolor, int bgcolor, int page)
+
+	Scrive la stringa con gli attributi specificati.
+
+    -----------------------------------------------------------------------
+	#include mgl.h
+	char MGL_readKey(char* skey)
+
+	Restituisce il codice di scansione del tasto premuto.
+
+    -----------------------------------------------------------------------
